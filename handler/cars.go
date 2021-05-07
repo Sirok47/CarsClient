@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"CarsServer/model"
-	"CarsServer/protocol"
 	"context"
+	"github.com/Sirok47/CarsServer/model"
+	"github.com/Sirok47/CarsServer/protocol"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -17,20 +17,19 @@ func NewCars(client protocol.CarsClient) *Cars {
 }
 
 func (h Cars) CreateCar(c echo.Context) error {
-	car:=&model.CarParams{}
+	car := &model.CarParams{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
-	err, _ := h.client.CreateCar(context.Background(), &protocol.Carparams{Carbrand: car.Carbrand,Mileage: int32(car.Mileage),Cartype: car.Cartype,Carnumber: int32(car.Carnumber)})
+	err, _ := h.client.CreateCar(context.Background(), &protocol.Carparams{Carbrand: car.Carbrand, Mileage: int32(car.Mileage), Cartype: car.Cartype, Carnumber: int32(car.Carnumber)})
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error)
 	}
 	return c.String(http.StatusCreated, "Car have been created")
 }
 
-
 func (h Cars) GetCar(c echo.Context) error {
-	car:=&model.CarParams{}
+	car := &model.CarParams{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
@@ -42,19 +41,19 @@ func (h Cars) GetCar(c echo.Context) error {
 }
 
 func (h Cars) UpdateCar(c echo.Context) error {
-		car:=&model.CarParams{}
-		if err := c.Bind(car); err != nil {
-			return err
-		}
-		err, _ := h.client.UpdateCar(context.Background(), &protocol.Carparams{Carnumber: int32(car.Carnumber),Mileage: int32(car.Mileage)})
-		if err != nil {
-			return c.String(http.StatusInternalServerError, err.Error)
-		}
-		return c.String(http.StatusCreated, "Car updated")
+	car := &model.CarParams{}
+	if err := c.Bind(car); err != nil {
+		return err
+	}
+	err, _ := h.client.UpdateCar(context.Background(), &protocol.Carparams{Carnumber: int32(car.Carnumber), Mileage: int32(car.Mileage)})
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error)
+	}
+	return c.String(http.StatusCreated, "Car updated")
 }
 
 func (h Cars) DeleteCar(c echo.Context) error {
-	car:=&model.CarParams{}
+	car := &model.CarParams{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
