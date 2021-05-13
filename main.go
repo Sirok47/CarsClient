@@ -20,13 +20,13 @@ func main() {
 
 	e := echo.New()
 
-	e.POST("/car/create", hndl.CreateCar)
+	e.POST("/car/create", hndl.Create)
 
-	e.GET("/car/get", hndl.GetCar)
+	e.GET("/car/get", hndl.Get)
 
-	e.PUT("/car/update", hndl.UpdateCar)
+	e.PUT("/car/update", hndl.Update)
 
-	e.DELETE("/car/delete", hndl.DeleteCar)
+	e.DELETE("/car/delete", hndl.Delete)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
