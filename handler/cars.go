@@ -33,7 +33,7 @@ func (h Cars) LogIn(c echo.Context) error {
 	if err := c.Bind(user); err != nil {
 		return err
 	}
-	token, err := h.client.LogIn(context.Background(), &protocol.Userdata{Nick: user.Nick})
+	token, err := h.client.LogIn(context.Background(), &protocol.Userdata{Nick: user.Nick, Password: user.Password})
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
