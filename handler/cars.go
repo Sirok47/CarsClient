@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/Sirok47/CarsServer/model"
-	"github.com/Sirok47/CarsServer/protocol"
+	protocol "github.com/Sirok47/CarsServer/protocol"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -14,6 +14,30 @@ type Cars struct {
 
 func NewCars(client protocol.CarsClient) *Cars {
 	return &Cars{client: client}
+}
+
+func (h Cars) SignUp(c echo.Context) error {
+	user := &model.UserParams{}
+	if err := c.Bind(user); err != nil {
+		return err
+	}
+	err, _ := h.client.SignUp(context.Background(), &protocol.Userdata{Nick: user.Nick, Password: user.Password})
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error)
+	}
+	return c.String(http.StatusCreated, "New user added")
+}
+
+func (h Cars) LogIn(c echo.Context) error {
+	user := &model.UserParams{}
+	if err := c.Bind(user); err != nil {
+		return err
+	}
+	token, err := h.client.LogIn(context.Background(), &protocol.Userdata{Nick: user.Nick})
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.String(http.StatusCreated, token.Token)
 }
 
 func (h Cars) Create(c echo.Context) error {

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Sirok47/CarsClient/handler"
-	"github.com/Sirok47/CarsServer/protocol"
+	protocol "github.com/Sirok47/CarsServer/protocol"
 	"github.com/labstack/echo"
 	"google.golang.org/grpc"
 )
@@ -19,6 +19,10 @@ func main() {
 	hndl := handler.NewCars(client)
 
 	e := echo.New()
+
+	e.POST("/user/signup", hndl.SignUp)
+
+	e.GET("/user/login", hndl.LogIn)
 
 	e.POST("/car/create", hndl.Create)
 
