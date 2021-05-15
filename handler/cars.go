@@ -17,7 +17,7 @@ func NewCars(client protocol.CarsClient) *Cars {
 }
 
 func (h Cars) SignUp(c echo.Context) error {
-	user := &model.UserParams{}
+	user := &model.User{}
 	if err := c.Bind(user); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (h Cars) SignUp(c echo.Context) error {
 }
 
 func (h Cars) LogIn(c echo.Context) error {
-	user := &model.UserParams{}
+	user := &model.User{}
 	if err := c.Bind(user); err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (h Cars) LogIn(c echo.Context) error {
 }
 
 func (h Cars) Create(c echo.Context) error {
-	car := &model.CarParams{}
+	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (h Cars) Create(c echo.Context) error {
 }
 
 func (h Cars) Get(c echo.Context) error {
-	car := &model.CarParams{}
+	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (h Cars) Get(c echo.Context) error {
 }
 
 func (h Cars) Update(c echo.Context) error {
-	car := &model.CarParams{}
+	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func (h Cars) Update(c echo.Context) error {
 }
 
 func (h Cars) Delete(c echo.Context) error {
-	car := &model.CarParams{}
+	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
 	}
