@@ -101,6 +101,32 @@ func TestSignUp(t *testing.T) {
 	}
 }
 
+func TestSignUp_Error(t *testing.T) {
+	defer dbconn.Exec(context.Background(), "delete from users")
+	reqbody, _ := json.Marshal(
+		map[string]string{
+			"Nick":     "",
+			"Password": "",
+		})
+	req, err := http.NewRequest("POST", "http://localhost:1323/user/signup", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody == "New user added" {
+		t.Errorf("Got no error with incorrect nick")
+	}
+}
+
 func TestLogIn(t *testing.T) {
 	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
 	defer dbconn.Exec(context.Background(), "delete from users")
@@ -125,6 +151,32 @@ func TestLogIn(t *testing.T) {
 	strbody := string(body)
 	if strbody == "rpc error: code = Unknown desc = code=401, message=Unauthorized" {
 		t.Errorf("Expected token, got %v", strbody)
+	}
+}
+
+func TestLogIn_Error(t *testing.T) {
+	defer dbconn.Exec(context.Background(), "delete from users")
+	reqbody, _ := json.Marshal(
+		map[string]string{
+			"Nick":     "keklik",
+			"Password": "qpwoeirutyM123",
+		})
+	req, err := http.NewRequest("GET", "http://localhost:1323/user/login", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody != "rpc error: code = Unknown desc = code=401, message=Unauthorized" {
+		t.Errorf("Expected error \"Unauthorized\", got %v", strbody)
 	}
 }
 
@@ -157,6 +209,35 @@ func TestCreate(t *testing.T) {
 	}
 }
 
+func TestCreate_Error(t *testing.T) {
+	defer dbconn.Exec(context.Background(), "delete from cars")
+	reqbody, _ := json.Marshal(
+		map[string]interface{}{
+			"CarBrand":  "test",
+			"CarNumber": 12345,
+			"Type":      "test",
+			"Mileage":   1000,
+		})
+	req, err := http.NewRequest("POST", "http://localhost:1323/car/create", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("%s %s", "Bearer", token))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody == "Car have been created" {
+		t.Errorf("Got no error with incorrect number")
+	}
+}
+
 func TestGet(t *testing.T) {
 	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "test", 1234, "test", 1000)
 	defer dbconn.Exec(context.Background(), "delete from cars")
@@ -180,7 +261,33 @@ func TestGet(t *testing.T) {
 	body, err = io.ReadAll(resp.Body)
 	strbody := string(body)
 	if strbody != "{\"CarBrand\":\"test\",\"CarNumber\":1234,\"Mileage\":1000,\"CarType\":\"test\"}\n" {
-		t.Errorf("Expected {\"CarBrand\":\"test\",\"CarNumber\":1234,\"Mileage\":1000,\"CarType\":\"test\"}\n got: %v.", strbody)
+		t.Errorf("Expected {\"CarBrand\":\"test\",\"CarNumber\":1234,\"Mileage\":1000,\"CarType\":\"test\"}\n got: %v", strbody)
+	}
+}
+
+func TestGet_Error(t *testing.T) {
+	defer dbconn.Exec(context.Background(), "delete from cars")
+	reqbody, _ := json.Marshal(
+		map[string]interface{}{
+			"CarNumber": 0,
+		})
+	req, err := http.NewRequest("GET", "http://localhost:1323/car/get", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("%s %s", "Bearer", token))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody == "{\"CarBrand\":\"\",\"CarNumber\":0,\"Mileage\":0,\"CarType\":\"\"}\n" {
+		t.Errorf("Expected error, got: %v", strbody)
 	}
 }
 
@@ -211,6 +318,35 @@ func TestUpdate(t *testing.T) {
 		t.Errorf("Got error %v", strbody)
 	}
 }
+
+func TestUpdate_Error(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "test", 1234, "test", 1111)
+	defer dbconn.Exec(context.Background(), "delete from cars")
+	reqbody, _ := json.Marshal(
+		map[string]interface{}{
+			"CarNumber": 1235,
+			"mileage":   1112,
+		})
+	req, err := http.NewRequest("PUT", "http://localhost:1323/car/update", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("%s %s", "Bearer", token))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody == "Car updated" {
+		t.Errorf("Got no error with nonexisting number")
+	}
+}
+
 func TestDelete(t *testing.T) {
 	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1234, "type", 1111)
 	defer dbconn.Exec(context.Background(), "delete from cars")
@@ -235,5 +371,32 @@ func TestDelete(t *testing.T) {
 	strbody := string(body)
 	if strbody != "Car deleted" {
 		t.Errorf("Got error %v", strbody)
+	}
+}
+
+func TestDelete_Error(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1234, "type", 1111)
+	defer dbconn.Exec(context.Background(), "delete from cars")
+	reqbody, _ := json.Marshal(
+		map[string]interface{}{
+			"CarNumber": 1235,
+		})
+	req, err := http.NewRequest("DELETE", "http://localhost:1323/car/delete", bytes.NewBuffer(reqbody))
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("%s %s", "Bearer", token))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := cli.Do(req)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err = io.ReadAll(resp.Body)
+	strbody := string(body)
+	if strbody == "Car deleted" {
+		t.Errorf("Got no error with nonexisting number")
 	}
 }
