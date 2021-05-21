@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"github.com/Sirok47/CarsClient/handler"
 	protocol "github.com/Sirok47/CarsServer/protocol"
-	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/swaggo/echo-swagger"
 	"google.golang.org/grpc"
 )
 
@@ -35,6 +36,8 @@ func main() {
 	e.PUT("/car/update", hndl.Update, TokenValidation)
 
 	e.DELETE("/car/delete", hndl.Delete, TokenValidation)
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

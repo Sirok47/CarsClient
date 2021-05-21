@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Sirok47/CarsServer/model"
 	protocol "github.com/Sirok47/CarsServer/protocol"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
