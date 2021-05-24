@@ -68,7 +68,7 @@ func (h *Cars) LogIn(c echo.Context) error {
 //@ID create-car
 //@Accept json
 //@Produce plain
-//@Param userobj body model.Car true "Car data"
+//@Param carobj body model.Car true "Car data"
 //@Router /car/create [post]
 //@Success 201 {object} c.String(http.StatusCreated, "Car have been created")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
@@ -91,7 +91,7 @@ func (h *Cars) Create(c echo.Context) error {
 //@ID get-car
 //@Accept json
 //@Produce json
-//@Param userobj body model.Car true "Car data"
+//@Param carobj body model.Car true "Car data"
 //@Router /car/get [get]
 //@Success 201 {object} c.JSON(http.StatusOK, carInfo)
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
@@ -114,7 +114,7 @@ func (h *Cars) Get(c echo.Context) error {
 //@ID update-car
 //@Accept json
 //@Produce plain
-//@Param userobj body model.Car true "Car data"
+//@Param carobj body model.Car true "Car data"
 //@Router /car/update [put]
 //@Success 201 {object} c.String(http.StatusOK, "Car updated")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
@@ -138,7 +138,7 @@ func (h *Cars) Update(c echo.Context) error {
 //@Accept json
 //@Produce plain
 //@Tags root
-//@Param userobj body model.Car true "Car data"
+//@Param car body model.Car true "Car data"
 //@Router /car/delete [delete]
 //@Success 201 {object} c.String(http.StatusOK, "Car deleted")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
