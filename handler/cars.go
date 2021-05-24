@@ -105,7 +105,7 @@ func (h *Cars) Get(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, carInfo)
+	return c.JSON(200, carInfo)
 }
 
 //Update godoc
