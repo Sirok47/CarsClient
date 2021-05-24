@@ -1,7 +1,6 @@
 package handler
 
 import (
-	_ "CarsClient/docs"
 	"context"
 	"github.com/Sirok47/CarsServer/model"
 	protocol "github.com/Sirok47/CarsServer/protocol"
@@ -17,18 +16,18 @@ func NewCars(client protocol.CarsClient) *Cars {
 	return &Cars{client: client}
 }
 
-//SignUp godoc
-//@Summary Create new user
-//@Description Creates new user using nick and password
-//@ID sign-up
-//@Accept json
-//@Produce plain
-//@Param userobj body model.Userdata true "User data"
-//@Router /user/signup [post]
-//@Success 201 {object} c.String(http.StatusCreated, "New user added")
-//@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
+// SignUp godoc
+// @Summary Create new user
+// @Description Creates new user using nick and password
+// @ID sign-up
+// @Accept json
+// @Produce plain
+// @Param userobj body model.Userdata true "User data"
+// @Router /user/signup [post]
+// @Success 201 {object} c.String(http.StatusCreated, "New user added")
+// @Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) SignUp(c echo.Context) error {
+func (h *Cars) SignUp(c echo.Context) error {
 	user := &model.User{}
 	if err := c.Bind(user); err != nil {
 		return err
@@ -51,7 +50,7 @@ func (h Cars) SignUp(c echo.Context) error {
 //@Success 201 {object} c.String(http.StatusOK, token.Token)
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) LogIn(c echo.Context) error {
+func (h *Cars) LogIn(c echo.Context) error {
 	user := &model.User{}
 	if err := c.Bind(user); err != nil {
 		return err
@@ -74,7 +73,7 @@ func (h Cars) LogIn(c echo.Context) error {
 //@Success 201 {object} c.String(http.StatusCreated, "Car have been created")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) Create(c echo.Context) error {
+func (h *Cars) Create(c echo.Context) error {
 	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
@@ -97,7 +96,7 @@ func (h Cars) Create(c echo.Context) error {
 //@Success 201 {object} c.JSON(http.StatusOK, carInfo)
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) Get(c echo.Context) error {
+func (h *Cars) Get(c echo.Context) error {
 	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
@@ -120,7 +119,7 @@ func (h Cars) Get(c echo.Context) error {
 //@Success 201 {object} c.String(http.StatusOK, "Car updated")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) Update(c echo.Context) error {
+func (h *Cars) Update(c echo.Context) error {
 	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
@@ -144,7 +143,7 @@ func (h Cars) Update(c echo.Context) error {
 //@Success 201 {object} c.String(http.StatusOK, "Car deleted")
 //@Failure 500 {object} c.String(http.StatusInternalServerError, err.Error)
 
-func (h Cars) Delete(c echo.Context) error {
+func (h *Cars) Delete(c echo.Context) error {
 	car := &model.Car{}
 	if err := c.Bind(car); err != nil {
 		return err
