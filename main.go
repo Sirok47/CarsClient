@@ -1,14 +1,20 @@
 package main
 
 import (
+	_ "CarsClient/docs"
 	"fmt"
 	"github.com/Sirok47/CarsClient/handler"
 	protocol "github.com/Sirok47/CarsServer/protocol"
-	"github.com/labstack/echo/middleware"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
 	"google.golang.org/grpc"
 )
+
+//@title Cars shop API
+//@version 1.1
+//@description This API lets managing cars DB
+//@host localhost:1323
 
 func main() {
 	TokenValidation := middleware.JWTWithConfig(middleware.JWTConfig{
