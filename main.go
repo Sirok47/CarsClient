@@ -15,7 +15,7 @@ import (
 //@version 1.1
 //@description This API lets managing cars DB
 //@host localhost:1323
-//@BasePath /
+//@BasePath
 //@schemes http
 
 func main() {
