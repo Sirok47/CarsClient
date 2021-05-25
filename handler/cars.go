@@ -46,7 +46,7 @@ func (h *Cars) SignUp(c echo.Context) error {
 //@Accept json
 //@Produce plain
 //@Param user body model.Userdata true "User data"
-//@Success 201 {object} string
+//@Success 200 {object} string
 //@Failure 500 {object} string
 //@Router /user/signup [post]
 
@@ -92,7 +92,7 @@ func (h *Cars) Create(c echo.Context) error {
 //@Accept json
 //@Produce json
 //@Param car body model.Car true "Car data"
-//@Success 201 {object} model.Car
+//@Success 200 {object} model.Car
 //@Failure 500 {object} string
 //@Router /car/get [get]
 
@@ -105,7 +105,7 @@ func (h *Cars) Get(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(200, carInfo)
+	return c.JSON(http.StatusOK, carInfo)
 }
 
 //Update godoc
@@ -115,7 +115,7 @@ func (h *Cars) Get(c echo.Context) error {
 //@Accept json
 //@Produce plain
 //@Param car body model.Car true "Car data"
-//@Success 201 {object} string
+//@Success 200 {object} string
 //@Failure 500 {object} string
 //@Router /car/update [put]
 
@@ -139,7 +139,7 @@ func (h *Cars) Update(c echo.Context) error {
 //@Produce plain
 //@Tags root
 //@Param car body model.Car true "Car data"
-//@Success 201 {object} string
+//@Success 200 {object} string
 //@Failure 500 {object} string
 //@Router /car/delete [delete]
 
