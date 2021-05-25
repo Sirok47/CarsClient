@@ -22,10 +22,10 @@ func NewCars(client protocol.CarsClient) *Cars {
 // @ID sign-up
 // @Accept json
 // @Produce plain
-// @Param userobj body model.Userdata true "User data"
-// @Router /user/signup [post]
+// @Param user body model.Userdata true "User data"
 // @Success 201 {object} string
 // @Failure 500 {object} string
+// @Router /user/signup [post]
 
 func (h *Cars) SignUp(c echo.Context) error {
 	user := &model.User{}
@@ -45,10 +45,10 @@ func (h *Cars) SignUp(c echo.Context) error {
 //@ID sign-up
 //@Accept json
 //@Produce plain
-//@Param userobj body model.Userdata true "User data"
-//@Router /user/signup [post]
+//@Param user body model.Userdata true "User data"
 //@Success 201 {object} string
 //@Failure 500 {object} string
+//@Router /user/signup [post]
 
 func (h *Cars) LogIn(c echo.Context) error {
 	user := &model.User{}
@@ -69,9 +69,9 @@ func (h *Cars) LogIn(c echo.Context) error {
 //@Accept json
 //@Produce plain
 //@Param car body model.Car true "Car data"
-//@Router /car/create [post]
 //@Success 201 {object} string
 //@Failure 500 {object} string
+//@Router /car/create [post]
 
 func (h *Cars) Create(c echo.Context) error {
 	car := &model.Car{}
@@ -92,9 +92,9 @@ func (h *Cars) Create(c echo.Context) error {
 //@Accept json
 //@Produce json
 //@Param car body model.Car true "Car data"
-//@Router /car/get [get]
 //@Success 201 {object} model.Car
 //@Failure 500 {object} string
+//@Router /car/get [get]
 
 func (h *Cars) Get(c echo.Context) error {
 	car := &model.Car{}
@@ -115,9 +115,9 @@ func (h *Cars) Get(c echo.Context) error {
 //@Accept json
 //@Produce plain
 //@Param car body model.Car true "Car data"
-//@Router /car/update [put]
 //@Success 201 {object} string
 //@Failure 500 {object} string
+//@Router /car/update [put]
 
 func (h *Cars) Update(c echo.Context) error {
 	car := &model.Car{}
@@ -139,9 +139,9 @@ func (h *Cars) Update(c echo.Context) error {
 //@Produce plain
 //@Tags root
 //@Param car body model.Car true "Car data"
-//@Router /car/delete [delete]
 //@Success 201 {object} string
 //@Failure 500 {object} string
+//@Router /car/delete [delete]
 
 func (h *Cars) Delete(c echo.Context) error {
 	car := &model.Car{}
