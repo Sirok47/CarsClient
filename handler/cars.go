@@ -64,13 +64,13 @@ func (h *Cars) SignUp(c echo.Context) error {
 //@Failure 500 {object} string
 //@Router /user/login [get]
 func (h *Cars) LogIn(c echo.Context) error {
-	user := &model.User{}
-	if err := c.Bind(user); err != nil {
+	user := model.User{}
+	if err := c.Bind(&user); err != nil {
 		return err
 	}
-	//if err := valid.Struct(user); err != nil {
-	//	return c.String(http.StatusBadRequest, err.Error())
-	//}
+	if err := c.Validate(user); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 	token, err := h.client.LogIn(context.Background(), &protocol.Userdata{Nick: user.Nick, Password: user.Password})
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
@@ -89,13 +89,13 @@ func (h *Cars) LogIn(c echo.Context) error {
 //@Failure 500 {object} string
 //@Router /car/create [post]
 func (h *Cars) Create(c echo.Context) error {
-	car := &model.Car{}
-	if err := c.Bind(car); err != nil {
+	car := model.Car{}
+	if err := c.Bind(&car); err != nil {
 		return err
 	}
-	//if err := valid.Struct(car); err != nil {
-	//	return c.String(http.StatusBadRequest, err.Error())
-	//}
+	if err := c.Validate(car); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 	err, _ := h.client.Create(context.Background(), &protocol.Carparams{CarBrand: car.CarBrand, Mileage: int32(car.Mileage), CarType: car.CarType, CarNumber: int32(car.CarNumber)})
 	if err.Error != "" {
 		return c.String(http.StatusInternalServerError, err.Error)
@@ -114,13 +114,13 @@ func (h *Cars) Create(c echo.Context) error {
 //@Failure 500 {object} string
 //@Router /car/get [get]
 func (h *Cars) Get(c echo.Context) error {
-	car := &model.Car{}
-	if err := c.Bind(car); err != nil {
+	car := model.Car{}
+	if err := c.Bind(&car); err != nil {
 		return err
 	}
-	//if err := valid.Struct(*car); err != nil {
-	//	return c.String(http.StatusBadRequest, err.Error())
-	//}
+	if err := c.Validate(car); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 	carInfo, err := h.client.Get(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber)})
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
@@ -143,9 +143,9 @@ func (h *Cars) Update(c echo.Context) error {
 	if err := c.Bind(&car); err != nil {
 		return err
 	}
-	//if err := valid.Struct(car); err != nil {
-	//	return err
-	//}
+	if err := c.Validate(car); err != nil {
+		return err
+	}
 	err, _ := h.client.Update(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber), Mileage: int32(car.Mileage)})
 	if err.Error != "" {
 		return c.String(http.StatusInternalServerError, err.Error)
@@ -164,13 +164,13 @@ func (h *Cars) Update(c echo.Context) error {
 //@Failure 500 {object} string
 //@Router /car/delete [delete]
 func (h *Cars) Delete(c echo.Context) error {
-	car := &model.Car{}
-	if err := c.Bind(car); err != nil {
+	car := model.Car{}
+	if err := c.Bind(&car); err != nil {
 		return err
 	}
-	//if err := valid.Struct(car); err != nil {
-	//	return c.String(http.StatusBadRequest, err.Error())
-	//}
+	if err := c.Validate(car); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
 	err, _ := h.client.Delete(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber)})
 	if err.Error != "" {
 		return c.String(http.StatusInternalServerError, err.Error)
