@@ -17,16 +17,7 @@ func NewCars(client protocol.CarsClient) *Cars {
 	return &Cars{client: client}
 }
 
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	return nil
-}
+var valid *validator.Validate
 
 // SignUp godoc
 // @Summary Create new user
@@ -43,7 +34,7 @@ func (h *Cars) SignUp(c echo.Context) error {
 	if err := c.Bind(&user); err != nil {
 		return err
 	}
-	if err := c.Validate(user); err != nil {
+	if err := valid.Struct(user); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	err, _ := h.client.SignUp(context.Background(), &protocol.Userdata{Nick: user.Nick, Password: user.Password})
@@ -68,7 +59,7 @@ func (h *Cars) LogIn(c echo.Context) error {
 	if err := c.Bind(user); err != nil {
 		return err
 	}
-	if err := c.Validate(user); err != nil {
+	if err := valid.Struct(user); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	token, err := h.client.LogIn(context.Background(), &protocol.Userdata{Nick: user.Nick, Password: user.Password})
@@ -93,7 +84,7 @@ func (h *Cars) Create(c echo.Context) error {
 	if err := c.Bind(car); err != nil {
 		return err
 	}
-	if err := c.Validate(car); err != nil {
+	if err := valid.Struct(car); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	err, _ := h.client.Create(context.Background(), &protocol.Carparams{CarBrand: car.CarBrand, Mileage: int32(car.Mileage), CarType: car.CarType, CarNumber: int32(car.CarNumber)})
@@ -118,7 +109,7 @@ func (h *Cars) Get(c echo.Context) error {
 	if err := c.Bind(car); err != nil {
 		return err
 	}
-	if err := c.Validate(car); err != nil {
+	if err := valid.Struct(car); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	carInfo, err := h.client.Get(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber)})
@@ -143,7 +134,7 @@ func (h *Cars) Update(c echo.Context) error {
 	if err := c.Bind(car); err != nil {
 		return err
 	}
-	if err := c.Validate(car); err != nil {
+	if err := valid.Struct(car); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	err, _ := h.client.Update(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber), Mileage: int32(car.Mileage)})
@@ -168,7 +159,7 @@ func (h *Cars) Delete(c echo.Context) error {
 	if err := c.Bind(car); err != nil {
 		return err
 	}
-	if err := c.Validate(car); err != nil {
+	if err := valid.Struct(car); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	err, _ := h.client.Delete(context.Background(), &protocol.Carparams{CarNumber: int32(car.CarNumber)})
