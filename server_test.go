@@ -9,6 +9,7 @@ import (
 	protocol "github.com/Sirok47/CarsServer/protocol"
 	"github.com/Sirok47/CarsServer/service"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -54,6 +55,7 @@ func TestMain(m *testing.M) {
 	}
 	hndl := handler.NewCars(client)
 	e := echo.New()
+	e.Validator = &handler.CustomValidator{Valid: validator.New()}
 	e.POST("/user/signup", hndl.SignUp)
 	e.GET("/user/login", hndl.LogIn)
 	e.POST("/car/create", hndl.Create, TokenValidation)
