@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Sirok47/CarsClient/handler"
 	protocol "github.com/Sirok47/CarsServer/protocol"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/swaggo/echo-swagger"
@@ -32,6 +33,8 @@ func main() {
 	hndl := handler.NewCars(client)
 
 	e := echo.New()
+
+	e.Validator = &handler.CustomValidator{validator: validator.New()}
 
 	e.POST("/user/signup", hndl.SignUp)
 
